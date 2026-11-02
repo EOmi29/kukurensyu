@@ -44,6 +44,7 @@ h1{margin:2vh 0 0;text-align:center;font-size:clamp(30px,7vh,64px)}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vh 1vw}
 .pad .btn{background:var(--card);color:var(--tx);border:3px solid var(--bd);padding:2.2vh 0;font-size:clamp(24px,5vh,48px)}
 .story{max-width:100%;box-sizing:border-box;font-size:clamp(26px,5.6vh,54px);line-height:1.8;font-weight:700;padding:3vh 3vw;background:var(--card);border:4px solid var(--bd);border-radius:24px}
+.yomi{display:block;font-size:clamp(24px,5vh,48px);font-weight:800;color:var(--bl)}
 #world.s2{padding-top:10px;transition:none}.s2 *{animation:none!important}.s2 .pp{transform:translateY(28px)}.s2 .cbl[style*=animation]{display:none}#cap{min-height:23vh}#stage{flex:1;min-height:0;position:relative;overflow:hidden;background:var(--card);border:4px solid var(--bd);border-radius:24px}
 #world{position:absolute;left:50%;top:0;width:1000px;margin-left:-500px;padding-top:120px;display:flex;flex-wrap:wrap;justify-content:center;gap:30px 24px;transform-origin:top center;transition:transform 1s ease}
 .u{flex:none;position:relative;width:150px;height:170px;display:flex;align-items:flex-end;justify-content:center}
@@ -94,7 +95,7 @@ function home(){
 function study(d,s){
   S={mode:'study',d};
   $('#app').innerHTML=hdr(`${d}の だん`)+`<div class="main"><div class="area">${plates(d,s,s)}</div></div>
-  <div class="say">${TH[TS].i} ${d}${TH[TS].iu}が ${s}${TH[TS].gu}<span class="big">${d} × ${s} = ${d*s}</span>あわせて ${d*s}${TH[TS].iu}</div>
+  <div class="say">${TH[TS].i} ${d}${TH[TS].iu}が ${s}${TH[TS].gu}<span class="yomi">${YM[d].split('/')[s-1]}</span><span class="big">${d} × ${s} = ${d*s}</span>あわせて ${d*s}${TH[TS].iu}</div>
   <div class="row"><button class="btn w" ${s<2?'disabled':''} onclick="study(${d},${s-1})">ひとつ もどる</button>
   ${s<9?`<button class="btn" onclick="study(${d},${s+1})">つぎの ${NN[TS]} ＋</button>`:`<button class="btn g" onclick="quiz('dan',${d})">もんだいに ちょうせん！</button>`}</div>`;
 }
@@ -155,6 +156,15 @@ function anim(t,n,rev,K,ord){
   $('#app').innerHTML=hdr(TH[t].nm)+`<div id="stage"><button id="rv" class="btn w" onclick="revealAll()">ぜんぶ みえるように する</button><div id="world"></div></div><div id="cap"></div><div class="row" id="ctl"></div>`;
   addU();
 }
+const YM={1:'いんいちが いち/いんにが に/いんさんが さん/いんしが し/いんごが ご/いんろくが ろく/いんしちが しち/いんはちが はち/いんくが く',
+2:'にいちが に/ににんが し/にさんが ろく/にしが はち/にご じゅう/にろく じゅうに/にしち じゅうし/にはち じゅうろく/にく じゅうはち',
+3:'さんいちが さん/さんにが ろく/さざんが く/さんし じゅうに/さんご じゅうご/さぶろく じゅうはち/さんしち にじゅういち/さんぱ にじゅうし/さんく にじゅうしち',
+4:'しいちが し/しにが はち/しさん じゅうに/しし じゅうろく/しご にじゅう/しろく にじゅうし/ししち にじゅうはち/しは さんじゅうに/しく さんじゅうろく',
+5:'ごいちが ご/ごに じゅう/ごさん じゅうご/ごし にじゅう/ごご にじゅうご/ごろく さんじゅう/ごしち さんじゅうご/ごは しじゅう/ごっく しじゅうご',
+6:'ろくいちが ろく/ろくに じゅうに/ろくさん じゅうはち/ろくし にじゅうし/ろくご さんじゅう/ろくろく さんじゅうろく/ろくしち しじゅうに/ろくは しじゅうはち/ろっく ごじゅうし',
+7:'しちいちが しち/しちに じゅうし/しちさん にじゅういち/しちし にじゅうはち/しちご さんじゅうご/しちろく しじゅうに/しちしち しじゅうく/しちは ごじゅうろく/しちく ろくじゅうさん',
+8:'はちいちが はち/はちに じゅうろく/はっさん にじゅうし/はっし さんじゅうに/はちご しじゅう/はちろく しじゅうはち/はちしち ごじゅうろく/はっぱ ろくじゅうし/はっく しちじゅうに',
+9:'くいちが く/くに じゅうはち/くさん にじゅうしち/くし さんじゅうろく/くご しじゅうご/くろく ごじゅうし/くしち ろくじゅうさん/くは ななじゅうに/くく はちじゅういち'};
 let TS=0,LF='';
 const OR=['1つぶんが さき','いくつぶんが さき','どっちも'];
 const ordRow=(cur,set,cb)=>`<p class="sub">もんだいの だしかたは どっち？</p><div class="row">${OR.map((s,i)=>`<button class="btn ${cur==i?'':'w'}" onclick="${set}${i};${cb}">${s}</button>`).join('')}</div>`;
